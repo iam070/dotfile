@@ -2,7 +2,7 @@
 function print_usage() {
     echo "Firstly donwload llvm, clang and compiler-rt source packages from "\
          "llvm official website into one folder. Then run this script will "\
-         "auto extra and make it."
+         "auto extract tars and make it."
 }
 
 if [ $# != 1 ]
