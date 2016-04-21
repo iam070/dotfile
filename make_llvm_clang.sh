@@ -73,7 +73,29 @@ mv projects/$COMP_RT_SRC projects/compiler-rt
 
 mkdir build
 cd build
+
 cmake -G "Unix Makefiles" ..
+if [ $? != 0]; then
+    echo "Failed to cmake Makefiles for llvm and clang."
+    exit 1
+fi
 make
+if [ $? != 0]; then
+    echo "Failed to make."
+fi
+
+
+mkdir -p ycm_build
+cd ycm_build
+
+cmake -G "Unix Makefiles" . -DEXTERNAL_LIBCLANG_PATH=../lib/libclang.so ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+if [ $? != 0]; then
+    echo "Failed to cmake Makefiles!"
+fi
+
+cmake --build . --target ycm_core --config Release
+if [ $? != 0]; then
+    echo "Failed to cmake build ycm_core!"
+fi
 
 exit 0
