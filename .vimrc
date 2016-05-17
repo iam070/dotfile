@@ -29,6 +29,7 @@ call SetupLeaderKey()
 function! GetWorkspaceSetting()
     let host = hostname()
     if host == ""
+    endif
 endfunction
 
 function! GetOS()
@@ -349,25 +350,9 @@ function! SetupBufexplorer()
 endfunction " end of SetupBufexlorer
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer: 
+" Maintainer:
 "       iam070@qq.com
 "       Modified based on Amir Salihefendic http://amix.dk - amix@amix.dk
-"
-" Sections:
-"    -> General
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
-"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vimrc
@@ -384,141 +369,141 @@ endfunction " end of cetupVimrcEdic()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Sets how many lines of history VIM has to remember
-set history=700
+function! SetupGeneral()
+    " Sets how many lines of history VIM has to remember
+    set history=700
 
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
+    " Enable filetype plugins
+    filetype plugin on
+    filetype indent on
 
-" Set to auto read when a file is changed from the outside
-set autoread
+    " Set to auto read when a file is changed from the outside
+    set autoread
 
-" Fast saving
-" nmap <leader>w :w!<cr>
+    " Fast saving
+    " nmap <leader>w :w!<cr>
+
+    " Set utf8 as standard encoding and en_US as the standard language
+    set encoding=utf8
+    set fileencodings=utf-8,gbk,gb18030,gk2312
+    set fileencoding=gbk
+
+    " Use Unix as the standard file type
+    set ffs=unix
+
+    " A buffer becomes hidden when it is abandoned
+    set hid
+
+    " Configure backspace so it acts as it should act
+    set backspace=eol,start,indent
+    set whichwrap+=<,>,h,l
+
+    " Ignore case when searching
+    set ignorecase
+
+    " When searching try to be smart about cases
+    set smartcase
+
+    " For regular expressions turn magic on
+    set magic
+
+    " swap file is annoying
+    set nobackup
+    set nowb
+    set noswapfile
+
+    " Text, tab and indent related
+    " Use spaces instead of tabs
+    set expandtab
+
+    " Be smart when using tabs ;)
+    set smarttab
+
+    " 1 tab == 4 spaces
+    set shiftwidth=4
+    set tabstop=4
+
+    " Linebreak on 500 characters
+    set lbr
+    set tw=500
+
+    set cindent
+    set nowrap "No wrap lines
+
+endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Set 7 lines to the cursor - when moving vertically using j/k
-set so=7
+function! SetupVimUI()
+    " Set 7 lines to the cursor - when moving vertically using j/k
+    set so=7
 
-" Turn on the WiLd menu
-set wildmenu
+    " Turn on the WiLd menu
+    set wildmenu
 
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
+    " Ignore compiled files
+    set wildignore=*.o,*~,*.pyc
 
-"Always show current position
-set ruler
+    "Always show current position
+    set ruler
 
-" Height of the command bar
-"set cmdheight=2
+    " Height of the command bar
+    "set cmdheight=2
 
-" Line number
-set nu
+    " Line number
+    set nu
 
-" A buffer becomes hidden when it is abandoned
-set hid
+    " Highlight search results
+    set hlsearch
 
-" Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
+    " Highlight current line
+    set cursorline
 
-" Ignore case when searching
-set ignorecase
+    " column 100 highlight
+    " set cc=80
 
-" When searching try to be smart about cases
-set smartcase
+    " Makes search act like search in modern browsers
+    set incsearch
 
-" Highlight search results
-set hlsearch
-
-" Highlight current line
-set cursorline
-
-" column 100 highlight
-" set cc=80
-
-" Makes search act like search in modern browsers
-set incsearch
-
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
-
-" For regular expressions turn magic on
-set magic
-
-" Show matching brackets when text indicator is over them
-" set showmatch
-
-" How many tenths of a second to blink when matching brackets
-" set mat=2
-
-" No annoying sound on errors
-set noerrorbells
-set novisualbell
-set t_vb=
-set tm=500
+    " Don't redraw while executing macros (good performance config)
+    set lazyredraw
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable syntax highlighting
-syntax enable
+    " Show matching brackets when text indicator is over them
+    " set showmatch
 
-colorscheme molokai
-set background=dark
+    " How many tenths of a second to blink when matching brackets
+    " set mat=2
 
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions+=e
-    set guitablabel=%M\ %t
-    set guifont=DejaVu_Sans_Mono:h12:cANSI
-else
-    set t_Co=256
-endif
+    " No annoying sound on errors
+    set noerrorbells
+    set novisualbell
+    set t_vb=
+    set tm=500
 
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
-set fileencodings=utf-8,gbk,gb18030,gk2312
-set fileencoding=gbk
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " => Colors and Fonts
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Enable syntax highlighting
+    syntax enable
 
-" Use Unix as the standard file type
-set ffs=unix
+    colorscheme molokai
+    set background=dark
 
+    " Set extra options when running in GUI mode
+    let g:airline_powerline_fonts=1
+    if has("gui_running")
+        echom "gui_running"
+        set guioptions=""
+        set guitablabel=%M\ %t
+        set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+    else
+        set guitablabel=%M\ %t
+        set t_Co=256
+    endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
-set noswapfile
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Use spaces instead of tabs
-set expandtab
-
-" Be smart when using tabs ;)
-set smarttab
-
-" 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
-
-" Linebreak on 500 characters
-set lbr
-set tw=500
-
-set cindent
-set nowrap "No wrap lines
-
+endfunction " end of SetupVimUI()
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -528,60 +513,58 @@ set nowrap "No wrap lines
 vnoremap <silent> * :call VisualSelection('f')<CR>
 vnoremap <silent> # :call VisualSelection('b')<CR>
 
+function SetupMoving()
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " => Moving around, tabs, windows and buffers
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Treat long lines as break lines (useful when moving around in them)
+    map j gj
+    map k gk
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Treat long lines as break lines (useful when moving around in them)
-map j gj
-map k gk
+    " Smart way to move between windows
+    map <C-j> <C-W>j
+    map <C-k> <C-W>k
+    map <C-h> <C-W>h
+    map <C-l> <C-W>l
 
-" Disable highlight when <leader><cr> is pressed
-map <silent> <leader><cr> :noh<cr>
+    " Close the current buffer
+    map <leader>bd :Bclose<cr>
+    map <leader>bn :bNext<cr>
+    map <leader>bp :bprevious<cr>
 
-" Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+    " Close all the buffers
+    map <leader>ba :1,1000 bd!<cr>
 
-" Close the current buffer
-map <leader>bd :Bclose<cr>
-map <leader>bn :bNext<cr>
-map <leader>bp :bprevious<cr>
+    " Useful mappings for managing tabs
+    map <leader>tc :tabnew<cr>
+    map <leader>tk :tabclose<cr>
+    map <leader>tm :tabmove
+    map <leader>tp :tabprevious<cr>
+    map <leader>tn :tabnext<cr>
+    map <leader>to :tabonly<cr>
 
-" Close all the buffers
-map <leader>ba :1,1000 bd!<cr>
+    " Opens a new tab with the current buffer's path
+    " Super useful when editing files in the same directory
+    map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
-" Useful mappings for managing tabs
-map <leader>tc :tabnew<cr>
-map <leader>tk :tabclose<cr>
-map <leader>tm :tabmove
-map <leader>tp :tabprevious<cr>
-map <leader>tn :tabnext<cr>
-map <leader>to :tabonly<cr>
+    " Switch CWD to the directory of the open buffer
+    map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+    " Specify the behavior when switching between buffers
+    try
+        set switchbuf=useopen,usetab,newtab
+        set stal=2
+    catch
+    endtry
 
-" Switch CWD to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
-
-" Specify the behavior when switching between buffers
-try
-    set switchbuf=useopen,usetab,newtab
-    set stal=2
-catch
-endtry
-
-" Return to last edit position when opening files (You want this!)
-autocmd BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
-            \   exe "normal! g`\"" |
-            \ endif
-" Remember info about open buffers on close
-set viminfo^=%
+    " Return to last edit position when opening files (You want this!)
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal! g`\"" |
+                \ endif
+    " Remember info about open buffers on close
+    set viminfo^=%
+endfunction " end of SetupMoving
 
 
 """"""""""""""""""""""""""""""
@@ -602,6 +585,9 @@ endfunction "end of SetupIndentLine()
 " => ConquerTerm
 """"""""""""""""""""""""""""""
 function! SetupConqueTerm()
+    if isdirectory(expand(GetVundleBeginPath()."/Conque-Shell")) == 0
+        return
+    endif
     nmap <silent><leader>cqb :ConqueTerm bash<cr>
 endfunction "end of SetupConqueTerm()
 
@@ -609,6 +595,9 @@ endfunction "end of SetupConqueTerm()
 " => Commentary
 """"""""""""""""""""""""""""""
 function! SetupCommentary()
+    if isdirectory(expand(GetVundleBeginPath()."/commentary.vim")) == 0
+        return
+    endif
     " Mapping
     " gc
     " \\
@@ -645,6 +634,8 @@ function! SetupCmdLineMode()
 endfunction " end of SetupCmdLineMode()
 
 function! SetupJedi()
+    if isdirectory(expand(GetVundleBeginPath()."/Jedi")) == 0
+        return
     let g:jedi#goto_command = "<leader>jc"
     let g:jedi#goto_assignments_command = "<leader>js"
     let g:jedi#goto_definitions_command = "<leader>jd"
@@ -681,42 +672,9 @@ function! SetupVimwiki()
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remap VIM 0 to first non-blank character
-" map 0 ^
-
-" Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-if has("mac") || has("macunix")
-    nmap <D-j> <M-j>
-    nmap <D-k> <M-k>
-    vmap <D-j> <M-j>
-    vmap <D-k> <M-k>
-endif
-
-" Delete trailing white space on save, useful for Python and CoffeeScript ;)
-func! DeleteTrailingWS()
-    exe "normal mz"
-    %s/\s\+$//ge
-    exe "normal `z"
-endfunc
-autocmd BufWrite *.py :call DeleteTrailingWS()
-autocmd BufWrite *.coffee :call DeleteTrailingWS()
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vimgrep searching and cope displaying
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! SetupSearch()
-    " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-    " in normal mode
-    nmap <space> /
-    nmap <c-space> ?
-
     " Press <leader>Enter select the word of current cursor
     nmap <silent> <leader><Enter> viw
     " clear word highligh
@@ -740,8 +698,6 @@ function! SetupSearch()
     "
     " When you search with vimgrep, display your results in cope by doing:
     "   <leader>cc
-    "
-    " To go to the next search result do:
     "   <leader>n
     "
     " To go to the previous search results do:
@@ -772,14 +728,13 @@ endfunction "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! SetupMisc()
     " Remove the Windows ^M - when the encodings gets messed up
-    " noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+    noremap <Leader>cm mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
     " Quickly open a buffer for scripbble
     map <leader>q :e ~/buffer<cr>
 
     " Toggle paste mode on and off
     map <leader>pp :setlocal paste!<cr>
-
 
 endfunction " end of SetupMisc()
 
@@ -843,7 +798,7 @@ function! <SID>BufcloseCloseIt()
     endif
 endfunction
 
-function! SetupMiniBufExpl() 
+function! SetupMiniBufExpl()
     let g:miniBufExplMapWindowNavArrows = 1
     let g:miniBufExplMapWindowNavVim = 1
     let g:miniBufExplMapCTabSwitchWindows = 1
@@ -874,25 +829,29 @@ function! SetupQuickFix()
 endfunction
 
 function! SetupYouCompleteMe()
+    if isdirectory(expand(GetVundleBeginPath()."/YouCompleteMe")) == 0
+        return
+    endif
+
     let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
     nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
     nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
     nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nnoremap <leader>gr :YcmForceCompileAndDiagnostics<CR>
 
-   set completeopt=longest,preview
-   autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-   inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+    set completeopt=longest,preview
+    autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+    inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
-   let g:ycm_confirm_extra_conf=0
-   let g:ycm_collect_identifiers_from_tags_files= 1
-   let g:ycm_collect_identifiers_from_comments_and_strings = 0
-   let g:ycm_min_num_of_chars_for_completion= 2
-   let g:ycm_cache_omnifunc=0
-   let g:ycm_seed_identifiers_with_syntax= 1
-   let g:ycm_complete_in_comments = 1
-   let g:ycm_complete_in_strings = 1
-   let g:ycm_key_invoke_completion = "<c-y>"
+    let g:ycm_confirm_extra_conf=0
+    let g:ycm_collect_identifiers_from_tags_files= 1
+    let g:ycm_collect_identifiers_from_comments_and_strings = 0
+    let g:ycm_min_num_of_chars_for_completion= 2
+    let g:ycm_cache_omnifunc=0
+    let g:ycm_seed_identifiers_with_syntax= 1
+    let g:ycm_complete_in_comments = 1
+    let g:ycm_complete_in_strings = 1
+    let g:ycm_key_invoke_completion = "<c-y>"
 endfunction " end of SetupYouCompleteMe
 
 function! SetupDrawit()
@@ -907,6 +866,11 @@ endfunction " end of SetupDrawit
 function! SetupColorColumn2()
     let g:colorcolumn2_ignore_filetypes = ['text', 'startify', 'help', 'vundle']
 endfunction
+
+" vim setup
+call SetupGeneral()
+call SetupVimUI()
+call SetupMoving()
 
 " plugin setup
 call SetupRainbowParentheses()
