@@ -518,10 +518,15 @@ function! SetupVimUI()
 
 
     if has("gui_running")
-        echom "gui_running"
         set guioptions=""
         set guitablabel=%M\ %t
-        set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+        if OSIsLinux()
+            " linux guifont format may cause gvim cannot startup without any msg
+            " in windows
+            set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+        else
+            set guifont=Sauce_Code_Powerline:h14:cANSI
+        endif
     else
         set guitablabel=%M\ %t
         set t_Co=256
@@ -701,10 +706,6 @@ endfunction
 function! SetupSearch()
     " Press <leader>Enter select the word of current cursor
     nmap <silent> <leader><Enter> viw
-    " clear word highligh
-    nmap <silent> <leader>sch /no_highligh_the_word<CR>
-    " clear ^M
-    nmap <silent> <leader>scm :%s///g<CR>
 
     " When you press gv you vimgrep after the selected text
     vnoremap <silent> <leader>sg :call VisualSelection('vimgrep')<CR>
