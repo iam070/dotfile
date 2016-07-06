@@ -107,7 +107,7 @@ function! VundleInit()
     """"""""""""""""""""""""""""""
     " => Snippets plugins
     """"""""""""""""""""""""""""""
-    "Plugin 'SirVer/ultisnips'
+    Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
 
     """"""""""""""""""""""""""""""
@@ -155,7 +155,7 @@ function! VundleInit()
     " => Comment
     """"""""""""""""""""""""""""""
     " commentary for multiply lines
-    Plugin 'commentary.vim'
+    Plugin 'scrooloose/nerdcommenter'
     Plugin 'vim-scripts/DoxygenToolkit.vim'
 
     " quickly add/del/change surround
@@ -226,6 +226,9 @@ function! VundleInit()
 
     " run shell in vim
     Plugin 'oplatek/Conque-Shell'
+
+    " undo tree history
+    Plugin 'mbbill/undotree'
 
     " Yank manage
     " Plugin 'YankRing.vim'
@@ -488,11 +491,32 @@ function! SetupVimUI()
     " Enable syntax highlighting
     syntax enable
 
-    colorscheme molokai
+    colorscheme solarized
     set background=dark
 
     " Set extra options when running in GUI mode
     let g:airline_powerline_fonts=1
+    " enable/disable enhanced tabline. (c)
+    let g:airline#extensions#tabline#enabled = 1
+    " enable/disable displaying open splits per tab (only when tabs are opened). >
+    let g:airline#extensions#tabline#show_splits = 1
+    " switch position of buffers and tabs on splited tabline (c)
+    let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
+    " enable/disable displaying buffers with a single tab. (c)
+    let g:airline#extensions#tabline#show_buffers = 1
+    " enable/disable displaying tabs, regardless of number. (c)
+    let g:airline#extensions#tabline#show_tabs = 1
+    " enable/disable display preview window buffer in the tabline. >
+    let g:airline#extensions#tabline#exclude_preview = 1
+    " configure how numbers are displayed in tab mode. >
+    let g:airline#extensions#tabline#tab_nr_type = 2 " # of splits (default)
+    " enable/disable displaying tab number in tabs mode. >
+    let g:airline#extensions#tabline#show_tab_nr = 1
+
+    " enable/disable displaying tab type (far right) >
+    let g:airline#extensions#tabline#show_tab_type = 1
+
+
     if has("gui_running")
         echom "gui_running"
         set guioptions=""
@@ -528,8 +552,8 @@ function SetupMoving()
     map <C-l> <C-W>l
 
     " Close the current buffer
-    map <leader>bd :Bclose<cr>
-    map <leader>bn :bNext<cr>
+    map <leader>bk :Bclose<cr>
+    map <leader>bn :bnext<cr>
     map <leader>bp :bprevious<cr>
 
     " Close all the buffers
@@ -685,7 +709,7 @@ function! SetupSearch()
     " When you press gv you vimgrep after the selected text
     vnoremap <silent> <leader>sg :call VisualSelection('vimgrep')<CR>
 
-    " Open vimgrepsvsvsvsvcccc and put the cursor in the right position
+    " Open vimgrep, put the cursor in the right position
     map <leader>sg :vimgrep // **/*.<left><left><left><left><left><left><left>
 
     " Vimgreps in the current file
@@ -693,6 +717,7 @@ function! SetupSearch()
 
     " When you press <leader>r you can search and replace the selected text
     vnoremap <silent> <leader>sr :call VisualSelection('replace')<CR>
+    vnoremap <silent> <leader>ssr :call VisualSelection('replace_similar')<CR>
 
     " Do :help cope if you are unsure what cope is. It's super useful!
     "
@@ -732,10 +757,15 @@ function! SetupMisc()
 
     " Quickly open a buffer for scripbble
     map <leader>q :e ~/buffer<cr>
+    map <leader>tmp :e /tmp/vim_tmp_file<cr>
 
     " Toggle paste mode on and off
     map <leader>pp :setlocal paste!<cr>
 
+    " XXX: will make <tab> shown as ^I
+    " show Enter char in eol
+    " set lcs=eol:⏎
+    " set list
 endfunction " end of SetupMisc()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -760,6 +790,8 @@ function! VisualSelection(direction) range
         call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
     elseif a:direction == 'replace'
         call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'replace_similar'
+        call CmdLine("%s" . '/'. l:pattern . '/' . l:pattern)
     elseif a:direction == 'f'
         execute "normal /" . l:pattern . "^M"
     endif
@@ -862,6 +894,13 @@ function! SetupDrawit()
     " <h><j><k><l> to move cursor
 endfunction " end of SetupDrawit
 
+function! SetupUndoTree()
+    if has("persistent_undo")
+        set undodir=~/.undodir/
+        set undofile
+    endif
+    nnoremap <leader>ut :UndotreeToggle<cr>
+endfunction
 
 function! SetupColorColumn2()
     let g:colorcolumn2_ignore_filetypes = ['text', 'startify', 'help', 'vundle']
@@ -892,6 +931,7 @@ call SetupStatusLine()
 call SetupYouCompleteMe()
 call SetupDrawit()
 call SetupConqueTerm()
+call SetupUndoTree()
 if has('python')
 py << EOL
 #import vim, os, site, sys
