@@ -1,41 +1,32 @@
-" install Vundle bundles
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Maintainer:
+"       iam070@qq.com
+"       Modified based on Amir Salihefendic http://amix.dk - amix@amix.dk
+" For linux:
+"       mkdir or link ~/.vimrc with my_vimrc
+"       install the vimplug, see the comment on VimplugInit()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 let $LANG = 'en'  "set message language
 set langmenu=en   "set menu's language of gvim. no spaces beside '='
 
-" My workspace
-" E7240_OPENSUSE: Dell E7240 laptop, openSUSE 42.1
-" MSI16F3_WIN7: MSI 16F3 laptop, Windows 7.
-" OA_WIN7: OA Cloud client, Windows 7, 172.24.129.14
-" OA_UBUNTU: OA Clound, Ubuntu 14.04, 172.24.129.99, telnet
-" DELL_182_UBUNTU: Dell desktop, Ubuntu 14.04, 192.168.204.182, ssh ruijie
-" DELL_183_UBUNTU: Dell desktop, Ubuntu 14.04, 192.168.204.183, ssh ruijie
-" DELL_184_UBUNTU: Dell desktop, Ubuntu 14.04, 192.168.204.184, ssh ruijie
-"
-
-let g:workspace = "DELL_183_UBUNTU"
+" let g:workspace = ""
 let g:OS_WINDOWS = "windows"
 let g:OS_LINUX = "linux"
 let g:OS_UNKNOWN = "unknown"
-let g:OS_LINUX = "linux"
 
+" vundle or vim-plug
 function! SetupLeaderKey()
     " With a map leader it's possible to do extra key combinations
     " like <leader>w saves the current file
     let mapleader = ","
     let g:mapleader = ","
 endfunction
-call SetupLeaderKey()
-
-function! GetWorkspaceSetting()
-    let host = hostname()
-    if host == ""
-    endif
-endfunction
 
 function! GetOS()
     if has("win32") || has("win64")
         return g:OS_WINDOWS
-    elseif has("linux")
+    elseif has("unix")
         return g:OS_LINUX
     else
         return g:OS_UNKNOWN
@@ -66,179 +57,262 @@ function! GetDefaultBufferVimrc()
     endif
 endfunction
 
-function! GetVundleBeginPath()
+function! GetPluginPath()
     let path = ''
     if GetOS() == g:OS_WINDOWS
-        let path = '$VIM/vimfiles/bundle'
+        let path = '$VIM/vimfiles/plugged'
     else
-        let path ='~/.vim/bundle'
+        let path ='~/.vim/plugged'
     endif
     return path
 endfunction
 
-function! VundleInit()
-    " install Vundle:
-    "   mkdir -p .vim/bundle
-    " for windows:
-    "   git clone https://github.com/VundleVim/Vundle.vim.git $VIM\vimfiles\bundle\Vundle.vim
-    " for linux:
-    "   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    " :PluginList       - lists configured plugins
-    " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-    " :PluginSearch foo - searches for foo; append `!` to refresh local cache
-    " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-
-    " bundle require nocomp and filetype off
+" vundle require special setup before init
+function! SetupBeforePluginMgrInit()
     set nocompatible
-    filetype off
+    filetype on
+endfunction
 
-    " the runtime path to include Vundle and initialize
-    let tmp_rtp=GetVundleBeginPath()."/Vundle.vim"
+function! VimplugInit()
+    " Installation:
+    " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    "     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    "
+    " basic use
+    "   call plug#begin()
+    "   Plug 'tpope/vim-sensible'
+    "   call plug#end()
 
-    " add runtimepath
-    exec "set rtp+=".tmp_rtp
-    call vundle#begin(GetVundleBeginPath())
+    call plug#begin(GetPluginPath())
 
-    " vim plugin manage/install/delete/update
-    Plugin 'gmarik/Vundle.vim'
+    """"""""""""""""""""""""""""""
+    " => file/project/session manage plugins
+    """"""""""""""""""""""""""""""
+    " sessions manage, replaced by unite session
+    "   Plug 'vim-scripts/sessionman.vim'
 
-    Plugin 'iam070/colorcolumn2.git'
+    " Ctrl+p for file search
+    Plug 'ctrlp.vim'
+
+    " a file explorer
+    Plug 'mbbill/VimExplorer'
+
+    " tree browser
+    Plug 'scrooloose/nerdtree'
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+    Plug 'iam070/nerdtree-svn-plugin'
+
+    " mostly recent use
+    " Plug 'mru.vim'
+
+    " buffer list explorer
+    Plug 'bufexplorer.zip'
+
+    Plug 'drmikehenry/vim-fontsize'
 
     """"""""""""""""""""""""""""""
     " => Snippets plugins
+    "    XXX: currently those snips will conflict with YouCompleteMe
     """"""""""""""""""""""""""""""
-    Plugin 'SirVer/ultisnips'
-    Plugin 'honza/vim-snippets'
+    " Plug 'SirVer/ultisnips'
+    " Plug 'honza/vim-snippets'
 
     """"""""""""""""""""""""""""""
     " => UI looks
     """"""""""""""""""""""""""""""
     " rainbow parentheses, make colors
-    Plugin 'kien/rainbow_parentheses.vim'
+    Plug 'kien/rainbow_parentheses.vim'
+
+    " set color columns
+    Plug 'iam070/colorcolumn2'
 
     " highlight the trailing whitespace in the end of lines
-    " Plugin 'trailing-whitespace'
-    Plugin 'ntpeters/vim-better-whitespace'
+    Plug 'ntpeters/vim-better-whitespace'
 
-    " line for indent
-    Plugin 'Yggdroot/indentLine'
+    " symbol char for indent
+    "   XXX: should be disable in vimwiki
+    Plug 'Yggdroot/indentLine'
 
-    Plugin 'Mark--Karkat'
+    " multiple colorful mark for words
+    Plug 'Mark--Karkat'
 
     " highlight for markdown
-    Plugin 'plasticboy/vim-markdown'
+    Plug 'plasticboy/vim-markdown'
 
-    " vim color schemes package
-    Plugin 'flazz/vim-colorschemes'
+    " a explorer for preview colorscheme, some bugs fixed
+    Plug 'iam070/colorSchemeExplorer'
 
-    " a nice color scheme
-    Plugin 'molokai'
+    " vim color schemes, a big collection package
+    Plug 'flazz/vim-colorschemes'
 
-    " another nice color scheme
-    Plugin 'altercation/vim-colors-solarized'
+    " Those two colorscheme are already in the vim-colorschemes package
+    " a nice color scheme, five starts
+    "   Plug 'molokai'
+    " another nice color scheme, five starts
+    "   Plug 'altercation/vim-colors-solarized'
 
     " beautiful statue line
-    Plugin 'bling/vim-airline'
+    Plug 'bling/vim-airline'
 
-    " buffer name shown in airline
-    " Plugin 'bling/vim-bufferline'
-
-    " a fancy start show
-    Plugin 'mhinz/vim-startify'
+    " official themes for air line
+    Plug 'vim-airline/vim-airline-themes'
 
     " visual mark
-    Plugin 'kshenoy/vim-signature'
+    " Plug 'kshenoy/vim-signature'
 
-    Plugin 'junkblocker/patchreview-vim'
+    " some bugs?
+    " Plug 'Highlight-and-Mark-Lines'
+
+
+    Plug 'Raimondi/delimitMate'
+
+    " a emacs-like tmp buffer
+    Plug 'mtth/scratch.vim'
+
+    " Five years passed, i still cannot handle the window resize command. :-(
+    " :-) to press <C-e>.
+    Plug 'simeji/winresizer'
+
+    " show #EEEEEE color
+    Plug 'lilydjwg/colorizer'
+
+
+    " preview for patch, little useful
+    Plug 'junkblocker/patchreview-vim'
+
+    " text align
+    Plug 'Tabular'
+
+    " quick move, like a jet
+    Plug 'Easymotion'
+
+    " a screen saver
+    Plug 'uguu-org/vim-matrix-screensaver'
+
+    " draw in vim
+    Plug 'drawit'
+
+    " run shell in vim
+    Plug 'oplatek/Conque-Shell'
+
+    " undo tree history
+    Plug 'mbbill/undotree'
 
     """"""""""""""""""""""""""""""
-    " => Comment
+    " => Comment tools
     """"""""""""""""""""""""""""""
     " commentary for multiply lines
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'vim-scripts/DoxygenToolkit.vim'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'vim-scripts/DoxygenToolkit.vim'
 
     " quickly add/del/change surround
-    Plugin 'surround.vim'
+    Plug 'surround.vim'
 
     " Ctrl-N to mark multiple location to work
-    Plugin 'kristijanhusak/vim-multiple-cursors'
-
-    """"""""""""""""""""""""""""""
-    " => Files
-    """"""""""""""""""""""""""""""
-    " file tree explorer
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'Xuyuanp/nerdtree-git-plugin'
-
-    " mostly recent use
-    " Plugin 'mru.vim'
-
-    " Ctrl+p for file search
-    Plugin 'ctrlp.vim'
-
-    Plugin 'bufexplorer.zip'
+    Plug 'kristijanhusak/vim-multiple-cursors'
 
 
     """"""""""""""""""""""""""""""
-    " => Files
+    " => Programming tools
     """"""""""""""""""""""""""""""
 
-    Plugin 'ctags.vim'
-    "Plugin 'pydoc.vim'
-    "Plugin 'Gist.vim'
-    "Plugin 'airblade/vim-gitgutter'
-    "Plugin 'WebAPI.vim'
+    " a very excellent completer for c/c++ or others, little hard to install now.
+    " run in YouComplete folder:
+    "   ./install.py --clang-completer
+    Plug 'Valloric/YouCompleteMe'
 
-    Plugin 'Tagbar'
-    Plugin 'rdnetto/YCM-Generator'
+    " easy way to generate .ycm_extra_conf for YouCompleteMe
+    Plug 'rdnetto/YCM-Generator'
 
-    " Plugin 'Raimondi/delimitMate'
-    " Plugin 'Townk/vim-autoclose'
-    " Plugin 'mattn/emmet-vim'
-    "Plugin 'Pydiction'
+    " go language support
+    "   Plug 'fatih/vim-go'
 
+    " a java completer and grammer
+    "   XXX: can eclipse run in shell?
+    "   Plug 'mattn/emmet-vim'
 
-    " a nice completer
-    Plugin 'Valloric/YouCompleteMe'
+    " python completer?
+    "   Plug 'Pydiction'
+
+    " show diff info in sign column
+    "   Plug 'airblade/vim-gitgutter'
+    " the original svngutter will cause lag with long svn log history
+    "   Plug 'iam070/vim-svngutter'
+
+    " a more powerful diff sign, replace git/svn gutter
+    Plug 'mhinz/vim-signify'
+
+    Plug 'Tagbar'
+
+    " tradictional tags
+    Plug 'ctags.vim'
+
+    " gtags >= ctags + cscope ?
+    Plug 'gtags.vim'
+
+    Plug 'multilobyte/gtags-cscope'
+
+    " a nice git integrate to vim
+    Plug 'tpope/vim-fugitive'
+
     " grammer check
-    Plugin 'scrooloose/syntastic'
-    Plugin 'syngan/vim-vimlint'
+    Plug 'scrooloose/syntastic'
 
-    Plugin 'pyflakes.vim'
+    " vim script lint
+    Plug 'syngan/vim-vimlint'
 
-    " python complete, use YouCompleteMe to instead this
-    " Plugin 'davidhalter/jedi-vim'
+    " python checker
+    Plug 'pyflakes.vim'
 
-    Plugin 'vimwiki/vimwiki'
 
     """"""""""""""""""""""""""""""
     " => Misc
     """"""""""""""""""""""""""""""
-    " text align
-    Plugin 'Tabular'
+    " personal vimki
+    Plug 'vimwiki/vimwiki'
+    " clone of emac org-mode
+    Plug 'jceb/vim-orgmode'
+    " personal calandar
+    Plug 'itchyny/calendar.vim'
 
-    " quick move
-    Plugin 'Easymotion'
+    " unite and related
+    Plug 'Shougo/unite.vim'
+    " session manage
+    Plug 'Shougo/unite-session'
+    " gtags via unite
+    Plug 'hewes/unite-gtags'
+    " bookmark via unite
+    Plug 'MattesGroeger/vim-bookmarks'
 
-    " draw in vim
-    Plugin 'drawit'
-
-    " run shell in vim
-    Plugin 'oplatek/Conque-Shell'
-
-    " undo tree history
-    Plugin 'mbbill/undotree'
 
     " Yank manage
-    " Plugin 'YankRing.vim'
+    " Plug 'YankRing.vim'
 
-    " vundle requird
-    call vundle#end()
+    " vim-plug requird
+    call plug#end()
     filetype plugin indent on
-endfunction " end of VundleInit()
+endfunction " end of VimplugInit()
 
-call VundleInit()
+function! SetupPluginMgr()
+    call VimplugInit()
+endfunction
+
+function! SetupGtagsCscope()
+    " To use the default key/mouse mapping:
+    let g:GtagsCscope_Auto_Map = 1
+    " To ignore letter case when searching:
+    let g:GtagsCscope_Ignore_Case = 1
+    " To use absolute path name:
+    let g:GtagsCscope_Absolute_Path = 1
+    " To deterring interruption:
+    let g:GtagsCscope_Keep_Alive = 1
+    " If you hope auto loading:
+    let g:GtagsCscope_Auto_Load = 1
+    " To use 'vim -t ', ':tag' and ''
+    set cscopeprg="gtags-cscope"
+    " To auto update tags when a file is saved, may have little lag
+    let g:GtagsCscope_Auto_Update = 1
+endfunction
 
 function! SetupRainbowParentheses()
     " custom the colors
@@ -265,7 +339,7 @@ function! SetupRainbowParentheses()
 
     let g:rbpt_loadcmd_toggle = 0
 
-    "let g:rainbowparent_ignore_filetypes = ['text', 'vimwiki', 'conque_term']
+    " let g:rainbowparent_ignore_filetypes = ['text', 'vimwiki', 'conque_term']
 
     "" Rainbow Parenthese commands
     ""RainbowParenthesesToggle       " Toggle it on/off
@@ -276,14 +350,19 @@ function! SetupRainbowParentheses()
     ""``
 
     " always on
-    " au VimEnter * RainbowParenthesesToggle
-    "au BufRead,BufNewFile * if ShouldEnableRainbowParenthese() | call RainbowParenthesesToggle | endif
-    "au Syntax * RainbowParenthesesLoadRound
-    "au Syntax * RainbowParenthesesLoadSquare
-    "au Syntax * RainbowParenthesesLoadBraces
+    au VimEnter * RainbowParenthesesToggle
+    " au BufRead,BufNewFile * if ShouldEnableRainbowParenthese() | call RainbowParenthesesToggle | endif
+    " au Syntax * RainbowParenthesesLoadRound
+    " au Syntax * RainbowParenthesesLoadSquare
+    " au Syntax * RainbowParenthesesLoadBraces
 
 endfunction "SetupRainbowParentheses
 
+" after loaded 'flazz/vim-colorschemes'
+function! SetupColorScheme()
+    colorscheme molokai
+    set background=dark
+endfunction
 
 """"""""""""""""""""""""""""""
 " => NERDTree
@@ -295,24 +374,24 @@ function! SetupNerdTree()
     map <leader>nn :NERDTreeToggle<cr>
     " open curent editing file path
     map <leader>nc :NERDTree %:p:h<cr>
+    " open and wait typing
+    map <leader>no :NERDTree ~/
 
     " file filter
     let g:NERDTreeIgnore=['.git$[[dir]]', '.o$[[file]]', '.pyc$[[file]]']
 
-    let g:NERDTreeIndicatorMapCustom = {
-        \ "Modified"  : "✹",
-        \ "Staged"    : "✚",
-        \ "Untracked" : "✭",
-        \ "Renamed"   : "➜",
-        \ "Unmerged"  : "═",
-        \ "Deleted"   : "✖",
-        \ "Dirty"     : "✗",
-        \ "Clean"     : "✔︎",
-        \ "Unknown"   : "?"
-        \ }
-
-    " if s:workspace == s:WRKSPCE_OA_WIN7
-    " endif
+    " nerdtree-git-plugin
+"   let g:NERDTreeIndicatorMapCustom = {
+"       \ "Modified"  : "✹",
+"       \ "Staged"    : "✚",
+"       \ "Untracked" : "✭",
+"       \ "Renamed"   : "➜",
+"       \ "Unmerged"  : "═",
+"       \ "Deleted"   : "✖",
+"       \ "Dirty"     : "✗",
+"       \ "Clean"     : "✔︎",
+"       \ "Unknown"   : "?"
+"       \ }
 endfunction
 
 function! SetupTagbar()
@@ -330,33 +409,26 @@ function! SetupTagbar()
     map <silent> <leader>tt :TagbarToggle<cr>
 
     " Tagbar filetype settings
-   "let g:tagbar_type_python = {
-   "    \ 'kinds' : [
-   "        \ 'c:classes',
-   "        \ 'i:imports',
-   "        \ 'f:functions',
-   "        \ 'm:class members',
-   "        \ 'v:variables',
-   "    \ ]
-   "\ }
-
+    "let g:tagbar_type_python = {
+    "    \ 'kinds' : [
+    "        \ 'c:classes',
+    "        \ 'i:imports',
+    "        \ 'f:functions',
+    "        \ 'm:class members',
+    "        \ 'v:variables',
+    "    \ ]
+    "\ }
 endfunction " end of SetupTagbar
-
 
 function! SetupBufexplorer()
     " Show 'No Name' buffers.
     " let g:bufExplorerShowNoName = 1
     " Show unlisted buffers.
     " let g:bufExplorerShowUnlisted = 1
-
-    nmap <silent> <leader>ls :BufExplorer<CR>
+    " nmap <silent> <leader>ls :BufExplorer<CR>
+    nmap <silent> <leader>ls :Unite buffer<CR>
 endfunction " end of SetupBufexlorer
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer:
-"       iam070@qq.com
-"       Modified based on Amir Salihefendic http://amix.dk - amix@amix.dk
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vimrc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -364,7 +436,7 @@ function! SetupVimrcEdit()
     "Fast editing of .vimrc
     map <silent> <leader>vrce :exec ':e'.GetDefaultVimrc()<cr>
     "Fast reloading of the .vimrc
-    map <silent> <leader>vrcs :exec ':source'.GetDefaultVimrc()<cr>
+    map <silent> <leader>vrcs :exec ':source '.GetDefaultVimrc()<cr>
     "When .vimrc is edited, reload it
     autocmd! bufwritepost :call GetDefaultBufferVimrc source :call GetDefaultVimrc()
 endfunction " end of cetupVimrcEdic()
@@ -384,12 +456,15 @@ function! SetupGeneral()
     set autoread
 
     " Fast saving
-    " nmap <leader>w :w!<cr>
+    nmap <leader>w :w!<cr>
+
+    " viminfo for mark save
+    set viminfo+=!
 
     " Set utf8 as standard encoding and en_US as the standard language
-    set encoding=utf8
-    set fileencodings=utf-8,gbk,gb18030,gk2312
-    set fileencoding=gbk
+    set encoding=utf-8
+    set fileencodings=utf-8,gb2312,gb18030
+    set fencs=utf8,gbk,gb2312,gb18030
 
     " Use Unix as the standard file type
     set ffs=unix
@@ -432,6 +507,8 @@ function! SetupGeneral()
 
     set cindent
     set nowrap "No wrap lines
+
+    set mouse=v
 
 endfunction
 
@@ -491,9 +568,6 @@ function! SetupVimUI()
     " Enable syntax highlighting
     syntax enable
 
-    colorscheme solarized
-    set background=dark
-
     " Set extra options when running in GUI mode
     let g:airline_powerline_fonts=1
     " enable/disable enhanced tabline. (c)
@@ -512,10 +586,11 @@ function! SetupVimUI()
     let g:airline#extensions#tabline#tab_nr_type = 2 " # of splits (default)
     " enable/disable displaying tab number in tabs mode. >
     let g:airline#extensions#tabline#show_tab_nr = 1
-
     " enable/disable displaying tab type (far right) >
     let g:airline#extensions#tabline#show_tab_type = 1
 
+    " theme of airline
+    let g:airline_theme='wombat'
 
     if has("gui_running")
         set guioptions=""
@@ -523,7 +598,9 @@ function! SetupVimUI()
         if OSIsLinux()
             " linux guifont format may cause gvim cannot startup without any msg
             " in windows
-            set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+            " set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+            " set guifont=Monospace\ 16
+            set guifont=Source\ Code\ Pro\ 16
         else
             set guifont=Sauce_Code_Powerline:h14:cANSI
         endif
@@ -542,7 +619,7 @@ endfunction " end of SetupVimUI()
 vnoremap <silent> * :call VisualSelection('f')<CR>
 vnoremap <silent> # :call VisualSelection('b')<CR>
 
-function SetupMoving()
+function! SetupMoving()
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " => Moving around, tabs, windows and buffers
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -581,7 +658,7 @@ function SetupMoving()
 
     " Specify the behavior when switching between buffers
     try
-        set switchbuf=useopen,usetab,newtab
+        set switchbuf=useopen,usetab
         set stal=2
     catch
     endtry
@@ -592,7 +669,7 @@ function SetupMoving()
                 \   exe "normal! g`\"" |
                 \ endif
     " Remember info about open buffers on close
-    set viminfo^=%
+    " set viminfo^=%
 endfunction " end of SetupMoving
 
 
@@ -603,7 +680,8 @@ function! SetupIndentLine()
     " enable indent line in these filetypes
     " let g:indentLine_fileType = ['c', 'cpp', 'py']
     " disable indent line in these filetypes, XXX: not work?
-    let g:indentLine_fileTypeExclude = ['txt', 'text', 'log', 'help']
+    " indentLine conflicts with vimwiki for the conceal feature
+    let g:indentLine_fileTypeExclude = ['txt', 'text', 'log', 'help', 'vimwiki' ]
     " disable indent line in these buffer
     let g:indentLine_bufNameExclude = ['_.*', 'NERD_tree.*']
     " set indent line char style similar to sublime's
@@ -614,7 +692,7 @@ endfunction "end of SetupIndentLine()
 " => ConquerTerm
 """"""""""""""""""""""""""""""
 function! SetupConqueTerm()
-    if isdirectory(expand(GetVundleBeginPath()."/Conque-Shell")) == 0
+    if isdirectory(expand(GetPluginPath()."/Conque-Shell")) == 0
         return
     endif
     nmap <silent><leader>cqb :ConqueTerm bash<cr>
@@ -624,7 +702,7 @@ endfunction "end of SetupConqueTerm()
 " => Commentary
 """"""""""""""""""""""""""""""
 function! SetupCommentary()
-    if isdirectory(expand(GetVundleBeginPath()."/commentary.vim")) == 0
+    if isdirectory(expand(GetPluginPath()."/commentary.vim")) == 0
         return
     endif
     " Mapping
@@ -662,42 +740,24 @@ function! SetupCmdLineMode()
     cnoremap <leader>f <S-Right>
 endfunction " end of SetupCmdLineMode()
 
-function! SetupJedi()
-    if isdirectory(expand(GetVundleBeginPath()."/Jedi")) == 0
-        return
-    let g:jedi#goto_command = "<leader>jc"
-    let g:jedi#goto_assignments_command = "<leader>js"
-    let g:jedi#goto_definitions_command = "<leader>jd"
-    let g:jedi#documentation_command = "<leader>jk"
-    let g:jedi#usages_command = "<leader>ju"
-    let g:jedi#completions_command = "<c-y>"
-    let g:jedi#rename_command = "<leader>jr"
-"   " jedi-vim {
-  let g:jedi#auto_vim_configuration = 0
-"   let g:jedi#popup_on_dot = 0
-  let g:jedi#popup_select_first = 0
-"   let g:jedi#completions_enabled = 0
-"   let g:jedi#completions_command = ""
-  let g:jedi#show_call_signatures = "1"
-
-"   let g:jedi#goto_assignments_command = "<leader>pa"
-"   let g:jedi#goto_definitions_command = "<leader>pd"
-"   let g:jedi#documentation_command = "<leader>pk"
-"   let g:jedi#usages_command = "<leader>pu"
-"   let g:jedi#rename_command = "<leader>pr"
-"   " }
-endfunction " end of SetupJedi()
-
 """"""""""""""""""""""""""""""
 " Vimwiki
 """"""""""""""""""""""""""""""
 function! SetupVimwiki()
-    if has("win32") || has("win64")
-        let g:vimwiki_list = [ {"path": "f:/KuaiPan/vimwiki/"}]
+    let wiki = {}
+""    let wiki.nested_syntaxes = { 'python': 'python', 'c++': 'cpp','c': 'c', 'make': 'make'}
+    let wiki.automatic_nested_syntaxes = 1
+
+    if OSIsLinux() == 0
+        let wiki.path = "f:/OneDrive/vimwiki/"
     else
-        let g:vimwiki_list = [ {"path": "~/KuaiPan/vimwiki/"}]
+        let wiki.path = "/data/vimwiki/"
     endif
-    let g:vimwiki_table_auto_fmt=0
+    let g:vimwiki_list = [wiki]
+
+    let g:vimwiki_table_auto_fmt = 0
+    let g:vimwiki_hl_cb_checked = 1
+    let g:vimwiki_use_calendar = 1
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -753,11 +813,14 @@ endfunction "
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! SetupMisc()
+    " default to load tags
+    set tags=tags;/
+    set diffopt+=horizontal
     " Remove the Windows ^M - when the encodings gets messed up
     noremap <Leader>cm mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
     " Quickly open a buffer for scripbble
-    map <leader>q :e ~/buffer<cr>
+    map <leader>q :e ~/.tmp.wiki<cr>
     map <leader>tmp :e /tmp/vim_tmp_file<cr>
 
     " Toggle paste mode on and off
@@ -800,7 +863,6 @@ function! VisualSelection(direction) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-
 
 " Returns true if paste mode is enabled
 function! HasPaste()
@@ -861,10 +923,49 @@ function! SetupQuickFix()
     map <silent> <leader>qf :QFix<cr>
 endfunction
 
+" NO WORK WELL, COMMENT CURRENTLY
+"
+"function! g:UltiSnips_Complete()
+"    call UltiSnips#ExpandSnippet()
+"    if g:ulti_expand_res == 0
+"        if pumvisible()
+"            return "\<C-n>"
+"        else
+"            call UltiSnips#JumpForwards()
+"            if g:ulti_jump_forwards_res == 0
+"                return "\<TAB>"
+"            endif
+"        endif
+"    endif
+"    return ""
+"endfunction
+"
+"function! g:UltiSnips_Reverse()
+"    call UltiSnips#JumpBackwards()
+"    if g:ulti_jump_backwards_res == 0
+"        return "\<C-P>"
+"    endif
+"
+"    return ""
+"endfunction
+"
+"function! SetupUltiSnipsConflict()
+"    if !exists("g:UltiSnipsJumpForwardTrigger")
+"        let g:UltiSnipsJumpForwardTrigger = "<tab>"
+"    endif
+"
+"    if !exists("g:UltiSnipsJumpBackwardTrigger")
+"        let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"    endif
+"
+"    au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
+"    au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+"endfunction
+
 function! SetupYouCompleteMe()
-    if isdirectory(expand(GetVundleBeginPath()."/YouCompleteMe")) == 0
-        return
-    endif
+    "if isdirectory(expand(GetPluginPath()."/YouCompleteMe")) == 0
+    "    return
+    "endif
 
     let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
     nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
@@ -885,6 +986,21 @@ function! SetupYouCompleteMe()
     let g:ycm_complete_in_comments = 1
     let g:ycm_complete_in_strings = 1
     let g:ycm_key_invoke_completion = "<c-y>"
+    let g:ycm_filetype_blacklist = {
+               \ 'tagbar' : 1,
+               \ 'qf' : 1,
+               \ 'notes' : 1,
+               \ 'markdown' : 1,
+               \ 'unite' : 1,
+               \ 'text' : 1,
+               \ 'vimwiki' : 1,
+               \ 'pandoc' : 1,
+               \ 'infolog' : 1,
+               \ 'mail' : 1,
+               \ 'diff' : 1,
+               \ 'patch' : 1,
+               \ 'git' : 1
+               \}
 endfunction " end of SetupYouCompleteMe
 
 function! SetupDrawit()
@@ -904,23 +1020,132 @@ function! SetupUndoTree()
 endfunction
 
 function! SetupColorColumn2()
-    let g:colorcolumn2_ignore_filetypes = ['text', 'startify', 'help', 'vundle']
+    let g:colorcolumn2_ignore_filetypes = ['text', 'help']
 endfunction
 
+" replaced by unite-session
+"function! SetupSessionman()
+"    set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
+"    nmap <leader>sl :SessionList<CR>
+"    nmap <leader>ss :SessionSave<CR>
+"    nmap <leader>sc :SessionClose<CR>
+"endfunction
+
+let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
+let s:minfontsize = 6
+let s:maxfontsize = 32
+function! AdjustFontSize(amount)
+  if has("gui_running")
+    let fontname = substitute(&guifont, s:pattern, '\1', '')
+    let cursize = substitute(&guifont, s:pattern, '\2', '')
+    let newsize = cursize + a:amount
+    if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
+      let newfont = fontname . newsize
+      let &guifont = newfont
+    endif
+  else
+    echoerr "You need to run the GUI version of Vim to use this function."
+  endif
+endfunction
+
+function! LargerFont()
+  call AdjustFontSize(1)
+endfunction
+command! LargerFont call LargerFont()
+
+function! SmallerFont()
+  call AdjustFontSize(-1)
+endfunction
+command! SmallerFont call SmallerFont()
+
+noremap <leader>fj :call SmallerFont()<cr>
+noremap <leader>fk :call LargerFont()<cr>
+
+function! SetupDoxgenToolkit()
+    let g:DoxygenToolkit_briefTag_funcName = "yes"
+    let g:DoxygenToolkit_briefTag_pre=""
+    let g:DoxygenToolkit_briefTag_post=" - "
+    let g:DoxygenToolkit_paramTag_pre="@"
+    let g:DoxygenToolkit_paramTag_post=":"
+    let g:DoxygenToolkit_returnTag="Returns "
+    let g:DoxygenToolkit_authorName="070"
+    let g:DoxygenToolkit_licenseTag="My own license"
+endfunction
+
+function! SetupSyntastic()
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+
+    let g:syntastic_always_populate_loc_list = 0
+    let g:syntastic_auto_loc_list = 0
+    let g:syntastic_check_on_open = 0
+    let g:syntastic_check_on_wq = 0
+endfunction
+
+function! SetupCtrlp()
+    if executable("ag")
+        set grepprg=ag\ --nogroup\ --nocolor
+        let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+    endif
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_show_hidden = 1
+    let g:ctrlp_max_depth = 40
+endfunction
+
+function! SetupUnite()
+
+    " unite-session
+    nnoremap <leader>uss :UniteSessionSave
+    nnoremap <leader>usl :Unite session<CR>
+
+    " unite-gtags
+    nnoremap <leader>ug :Unite gtags/
+    nnoremap <leader>ugd :Unite gtags/def<CR>
+    nnoremap <leader>ugr :Unite gtags/ref<CR>
+    autocmd BufEnter *
+        \   if empty(&buftype)
+        \|      nnoremap <buffer> <C-]> :Unite gtags/def<CR>
+        \|  endif
+
+endfunction
+
+function! SetupColorizer()
+    " the plugin will map ,tc, which cause confliction in my vimrc
+    let g:colorizer_nomap = 1
+endfunction
+
+function! SetupVimBookmarks()
+    call unite#custom#profile('source/vim_bookmarks', 'context', {
+        \   'winheight': 13,
+        \   'direction': 'botright',
+        \   'start_insert': 0,
+        \   'keep_focus': 1,
+        \   'no_quit': 1,
+        \ })
+endfunction
+
+"
 " vim setup
+"
+call SetupLeaderKey()
 call SetupGeneral()
 call SetupVimUI()
 call SetupMoving()
-
+"
 " plugin setup
+call SetupBeforePluginMgrInit()
+call SetupPluginMgr()
+call SetupGtagsCscope()
 call SetupRainbowParentheses()
+call SetupColorScheme()
 call SetupColorColumn2()
 call SetupNerdTree()
 call SetupTagbar()
 call SetupBufexplorer()
 call SetupQuickFix()
 call SetupVimwiki()
-" call SetupJedi()
 call SetupCmdLineMode()
 call SetupMiniBufExpl()
 call SetupMisc()
@@ -929,18 +1154,16 @@ call SetupSearch()
 call SetupVimrcEdit()
 call SetupIndentLine()
 call SetupStatusLine()
-call SetupYouCompleteMe()
 call SetupDrawit()
 call SetupConqueTerm()
 call SetupUndoTree()
-if has('python')
-py << EOL
-#import vim, os, site, sys
-# prj_path = '/home/iam070/Project/project_n18k/'
-# os.system("export PYTHONPATH=" + prj_path)
-# sys.path.append('/home/iam070/Project/project_n18k/')
-# os.environ["PYTHONPATH"] = prj_path
-#vim.command(r'set path+='+paths)
-EOL
-endif
-"}
+"call SetupSessionman()
+call SetupDoxgenToolkit()
+call SetupSyntastic()
+call SetupVimBookmarks()
+call SetupColorScheme()
+call SetupUnite()
+call SetupColorizer()
+" call SetupUltiSnipsConflict()
+call SetupYouCompleteMe()
+
