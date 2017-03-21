@@ -361,8 +361,8 @@ endfunction "SetupRainbowParentheses
 
 " after loaded 'flazz/vim-colorschemes'
 function! SetupColorScheme()
-    colorscheme molokai
     set background=dark
+    colorscheme solarized
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -759,6 +759,15 @@ function! SetupVimwiki()
     let g:vimwiki_table_auto_fmt = 0
     let g:vimwiki_hl_cb_checked = 1
     let g:vimwiki_use_calendar = 1
+
+    exec "hi VimwikiHeader1 guifg=#FF0000 ctermfg=220"
+    exec "hi VimwikiHeader2 guifg=#00FF00 ctermfg=210"
+    exec "hi VimwikiHeader3 guifg=#0000FF ctermfg=170"
+    exec "hi VimwikiHeader4 guifg=#FF00FF ctermfg=105"
+    exec "hi VimwikiHeader5 guifg=#00FFFF ctermfg=80"
+    exec "hi VimwikiHeader6 guifg=#FFFF00 ctermfg=40"
+
+
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1146,7 +1155,6 @@ call SetupNerdTree()
 call SetupTagbar()
 call SetupBufexplorer()
 call SetupQuickFix()
-call SetupVimwiki()
 call SetupCmdLineMode()
 call SetupMiniBufExpl()
 call SetupMisc()
@@ -1168,4 +1176,5 @@ call SetupColorizer()
 " call SetupUltiSnipsConflict()
 call SetupYouCompleteMe()
 call SetupCtrlp()
+call SetupVimwiki()
 
