@@ -300,7 +300,8 @@ endfunction
 function! SetupGtagsCscope()
     " AutoMap will map <C-p> to :cp<CR>, conflicting with CtrlP
     "   let g:GtagsCscope_Auto_Map = 1
-
+    " To quiet gtags cscope
+    let g:GtagsCscope_Quiet = 1
     " To ignore letter case when searching:
     let g:GtagsCscope_Ignore_Case = 1
     " To use absolute path name:
@@ -363,6 +364,8 @@ endfunction "SetupRainbowParentheses
 function! SetupColorScheme()
     set background=dark
     colorscheme solarized
+    " make the default bg of SignColumn more normally
+    highlight clear SignColumn ctermbg guibg
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -372,11 +375,11 @@ function! SetupNerdTree()
     " key binding
 
     " toggle NerdTree
-    map <leader>nn :NERDTreeToggle<cr>
+    nmap <silent> <leader>nn :NERDTreeToggle<cr>
     " open curent editing file path
-    map <leader>nc :NERDTree %:p:h<cr>
+    nmap <silent> <leader>nc :NERDTree %:p:h<cr>
     " open and wait typing
-    map <leader>no :NERDTree ~/
+    nmap <leader>nh :NERDTree ~/
 
     " file filter
     let g:NERDTreeIgnore=['.git$[[dir]]', '.o$[[file]]', '.pyc$[[file]]']
@@ -409,6 +412,22 @@ function! SetupTagbar()
     " Tagbar toggle
     map <silent> <leader>tt :TagbarToggle<cr>
 
+    let g:tagbar_type_vimwiki = {
+        \ 'ctagstype'   : "vimwiki",
+        \ 'kinds'       : [
+            \ 't:todos:0:0',
+            \ 'f:finishs:0:0',
+            \ 'a:headers:0:0',
+            \ 'b:headers:0:0',
+            \ 'c:headers:0:0',
+            \ 'd:headers:0:0',
+            \ 'e:headers:0:0',
+        \ ],
+        \ 'sort'        : 0,
+    \ }
+
+"   \ 'deffile' : expand('<sfile>:p:h:h') . '/ctags/vimwiki.cnf'
+
     " Tagbar filetype settings
     "let g:tagbar_type_python = {
     "    \ 'kinds' : [
@@ -427,7 +446,6 @@ function! SetupBufexplorer()
     " Show unlisted buffers.
     " let g:bufExplorerShowUnlisted = 1
     " nmap <silent> <leader>ls :BufExplorer<CR>
-    nmap <silent> <leader>ls :Unite buffer<CR>
 endfunction " end of SetupBufexlorer
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -458,6 +476,14 @@ function! SetupGeneral()
 
     " Fast saving
     nmap <leader>w :w!<cr>
+    
+    " emacs style movement in insert mode
+    inoremap <C-F> <Right>
+    inoremap <C-B> <Left>
+    inoremap <C-N> <Down>
+    inoremap <C-P> <Up>
+    inoremap <C-A> <Home>
+    inoremap <C-E> <End>
 
     " viminfo for mark save
     set viminfo+=!
@@ -591,7 +617,7 @@ function! SetupVimUI()
     let g:airline#extensions#tabline#show_tab_type = 1
 
     " theme of airline
-    let g:airline_theme='wombat'
+    let g:airline_theme='solarized'
 
     if has("gui_running")
         set guioptions=""
@@ -682,7 +708,7 @@ function! SetupIndentLine()
     " let g:indentLine_fileType = ['c', 'cpp', 'py']
     " disable indent line in these filetypes, XXX: not work?
     " indentLine conflicts with vimwiki for the conceal feature
-    let g:indentLine_fileTypeExclude = ['txt', 'text', 'log', 'help', 'vimwiki' ]
+    let g:indentLine_fileTypeExclude = ['txt', 'text', 'log', 'help', 'vimwiki' , 'markdown']
     " disable indent line in these buffer
     let g:indentLine_bufNameExclude = ['_.*', 'NERD_tree.*']
     " set indent line char style similar to sublime's
@@ -766,8 +792,11 @@ function! SetupVimwiki()
     exec "hi VimwikiHeader4 guifg=#FF00FF ctermfg=105"
     exec "hi VimwikiHeader5 guifg=#00FFFF ctermfg=80"
     exec "hi VimwikiHeader6 guifg=#FFFF00 ctermfg=40"
+endfunction
 
-
+function! SetupMarkdown()
+    " apply conceal feature in vim-markdown mode
+    set conceallevel=2
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1110,6 +1139,10 @@ function! SetupUnite()
     nnoremap <leader>uss :UniteSessionSave
     nnoremap <leader>usl :Unite session<CR>
 
+    nmap <silent> <leader>ls :Unite buffer<CR>
+    nmap <silent> <leader>lt :Unite tab<CR>
+    nmap <silent> <leader>lw :Unite window<CR>
+
     " unite-gtags
     nnoremap <leader>ug :Unite gtags/
     nnoremap <leader>ugd :Unite gtags/def<CR>
@@ -1177,4 +1210,4 @@ call SetupColorizer()
 call SetupYouCompleteMe()
 call SetupCtrlp()
 call SetupVimwiki()
-
+call SetupMarkdown()
