@@ -15,6 +15,42 @@ let g:OS_WINDOWS = "windows"
 let g:OS_LINUX = "linux"
 let g:OS_UNKNOWN = "unknown"
 
+
+""""{ true, 'm', "modifiedFile",  "modified files"},
+""""{ true, 'n', "newFile",       "newly created files"},
+""""{ true, 'd', "deletedFile",   "deleted files"},
+""""{ true, 'h', "hunk",          "hunks"},
+
+"   let type_python.kind2scope = {
+"       \ 'c' : 'class',
+"       \ 'f' : 'function',
+"       \ 'm' : 'function'
+"   \ }
+"   let type_python.scope2kind = {
+"       \ 'class'    : 'c',
+"       \ 'function' : 'f'
+"   \ }
+
+" scope2kind: 根据key找到value对应的kinds成员
+" kind2scope: 根据key找到value对应的
+let g:tagbar_type_diff = {
+    \ 'ctagstype' : 'diff',
+    \ 'ctagsargs' : '-f - --fields=nksSa',
+    \ 'sro' : ':',
+    \ 'kinds'     : [
+        \ 'm:modifiedFile:0:0',
+        \ 'h:hunk:0:0',
+        \ 'n:newFile:0:0',
+        \ 'd:deletedFile:0:0',
+        \ ],
+    \ 'scope2kind' : {
+        \ 'modifiedFile' : 'm',
+    \ },
+    \ 'kind2scope' : {
+        \ 'm' : 'modifiedFile',
+    \ }
+\ }
+
 " vundle or vim-plug
 function! SetupLeaderKey()
     " With a map leader it's possible to do extra key combinations
@@ -88,11 +124,14 @@ function! VimplugInit()
     """"""""""""""""""""""""""""""
     " => file/project/session manage plugins
     """"""""""""""""""""""""""""""
-    " sessions manage, replaced by unite session
-    "   Plug 'vim-scripts/sessionman.vim'
+    " sessions manage
+    Plug 'vim-scripts/sessionman.vim'
 
     " Ctrl+p for file search
-    Plug 'ctrlp.vim'
+    Plug 'kien/ctrlp.vim'
+
+    " multiple context
+    Plug 'dyng/ctrlsf.vim'
 
     " a file explorer
     Plug 'mbbill/VimExplorer'
@@ -106,7 +145,8 @@ function! VimplugInit()
     " Plug 'mru.vim'
 
     " buffer list explorer
-    Plug 'bufexplorer.zip'
+    " Plug 'bufexplorer.zip'
+    Plug 'sandeepcr529/Buffet.vim'
 
     Plug 'drmikehenry/vim-fontsize'
 
@@ -134,7 +174,7 @@ function! VimplugInit()
     Plug 'Yggdroot/indentLine'
 
     " multiple colorful mark for words
-    Plug 'Mark--Karkat'
+    Plug 'vim-scripts/Mark--Karkat'
 
     " highlight for markdown
     Plug 'plasticboy/vim-markdown'
@@ -158,11 +198,13 @@ function! VimplugInit()
     Plug 'vim-airline/vim-airline-themes'
 
     " visual mark
-    " Plug 'kshenoy/vim-signature'
+    Plug 'kshenoy/vim-signature'
 
     " some bugs?
     " Plug 'Highlight-and-Mark-Lines'
 
+    " tab manager
+    Plug 'kien/tabman.vim'
 
     Plug 'Raimondi/delimitMate'
 
@@ -174,23 +216,23 @@ function! VimplugInit()
     Plug 'simeji/winresizer'
 
     " show #EEEEEE color
-    Plug 'lilydjwg/colorizer'
+    " Plug 'lilydjwg/colorizer'
 
 
     " preview for patch, little useful
     Plug 'junkblocker/patchreview-vim'
 
     " text align
-    Plug 'Tabular'
+    Plug 'godlygeek/tabular'
 
     " quick move, like a jet
-    Plug 'Easymotion'
+    Plug 'easymotion/vim-easymotion'
 
     " a screen saver
     Plug 'uguu-org/vim-matrix-screensaver'
 
     " draw in vim
-    Plug 'drawit'
+    Plug 'vim-scripts/drawit'
 
     " run shell in vim
     Plug 'oplatek/Conque-Shell'
@@ -206,7 +248,7 @@ function! VimplugInit()
     Plug 'vim-scripts/DoxygenToolkit.vim'
 
     " quickly add/del/change surround
-    Plug 'surround.vim'
+    Plug 'tpope/vim-surround'
 
     " Ctrl-N to mark multiple location to work
     Plug 'kristijanhusak/vim-multiple-cursors'
@@ -222,7 +264,7 @@ function! VimplugInit()
     Plug 'Valloric/YouCompleteMe'
 
     " easy way to generate .ycm_extra_conf for YouCompleteMe
-    Plug 'rdnetto/YCM-Generator'
+    " Plug 'rdnetto/YCM-Generator'
 
     " go language support
     "   Plug 'fatih/vim-go'
@@ -242,13 +284,15 @@ function! VimplugInit()
     " a more powerful diff sign, replace git/svn gutter
     Plug 'mhinz/vim-signify'
 
-    Plug 'Tagbar'
+    Plug 'will133/vim-dirdiff'
+
+    Plug 'majutsushi/tagbar'
 
     " tradictional tags
-    Plug 'ctags.vim'
+    Plug 'vim-scripts/ctags.vim'
 
     " gtags >= ctags + cscope ?
-    Plug 'gtags.vim'
+    Plug 'vim-scripts/gtags.vim'
 
     Plug 'multilobyte/gtags-cscope'
 
@@ -262,7 +306,7 @@ function! VimplugInit()
     Plug 'syngan/vim-vimlint'
 
     " python checker
-    Plug 'pyflakes.vim'
+    Plug 'kevinw/pyflakes-vim'
 
 
     """"""""""""""""""""""""""""""
@@ -281,9 +325,15 @@ function! VimplugInit()
     Plug 'Shougo/unite-session'
     " gtags via unite
     Plug 'hewes/unite-gtags'
-    " bookmark via unite
-    Plug 'MattesGroeger/vim-bookmarks'
 
+    " bookmark via unite
+    " Plug 'MattesGroeger/vim-bookmarks'
+
+    " search
+    Plug 'dkprice/vim-easygrep'
+
+    " fly grep
+    Plug 'wsdjeg/FlyGrep.vim'
 
     " Yank manage
     " Plug 'YankRing.vim'
@@ -363,6 +413,7 @@ endfunction "SetupRainbowParentheses
 " after loaded 'flazz/vim-colorschemes'
 function! SetupColorScheme()
     set background=dark
+    " colorscheme molokai
     colorscheme solarized
     " make the default bg of SignColumn more normally
     highlight clear SignColumn ctermbg guibg
@@ -595,6 +646,8 @@ function! SetupVimUI()
     " Enable syntax highlighting
     syntax enable
 
+    nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+
     " Set extra options when running in GUI mode
     let g:airline_powerline_fonts=1
     " enable/disable enhanced tabline. (c)
@@ -615,9 +668,11 @@ function! SetupVimUI()
     let g:airline#extensions#tabline#show_tab_nr = 1
     " enable/disable displaying tab type (far right) >
     let g:airline#extensions#tabline#show_tab_type = 1
+    " disable white space check
+    let g:airline#extensions#whitespace#enabled = 0
 
     " theme of airline
-    let g:airline_theme='solarized'
+    let g:airline_theme='zenburn'
 
     if has("gui_running")
         set guioptions=""
@@ -625,9 +680,10 @@ function! SetupVimUI()
         if OSIsLinux()
             " linux guifont format may cause gvim cannot startup without any msg
             " in windows
-            " set guifont=Source\ Code\ Pro\ for\ Powerline\ 16
+            set guifont=Source\ Code\ Pro\ for\ Powerline\ 14
             " set guifont=Monospace\ 16
-            set guifont=Source\ Code\ Pro\ 16
+            " set guifont=Source\ Code\ Pro\ 14
+            " set guifont=DroidSansMonoForPowerline\ Nerd\ Font\ 18
         else
             set guifont=Sauce_Code_Powerline:h14:cANSI
         endif
@@ -771,6 +827,12 @@ endfunction " end of SetupCmdLineMode()
 " Vimwiki
 """"""""""""""""""""""""""""""
 function! SetupVimwiki()
+    let wiki_md = {}
+    let wiki_md.automatic_nested_syntaxes = 1
+    let wiki_md.path = "/data/vimwiki_md/"
+    let wiki_md.syntax = "markdown"
+    let wiki_md.ext = ".md"
+
     let wiki = {}
 ""    let wiki.nested_syntaxes = { 'python': 'python', 'c++': 'cpp','c': 'c', 'make': 'make'}
     let wiki.automatic_nested_syntaxes = 1
@@ -780,7 +842,7 @@ function! SetupVimwiki()
     else
         let wiki.path = "/data/vimwiki/"
     endif
-    let g:vimwiki_list = [wiki]
+    let g:vimwiki_list = [wiki, wiki_md]
 
     let g:vimwiki_table_auto_fmt = 0
     let g:vimwiki_hl_cb_checked = 1
@@ -805,6 +867,10 @@ endfunction
 function! SetupSearch()
     " Press <leader>Enter select the word of current cursor
     nmap <silent> <leader><Enter> viw
+
+    " Always: n -> forward, N <- backward
+    nnoremap <expr> n  'Nn'[v:searchforward]
+    nnoremap <expr> N  'nN'[v:searchforward]
 
     " When you press gv you vimgrep after the selected text
     vnoremap <silent> <leader>sg :call VisualSelection('vimgrep')<CR>
@@ -1012,7 +1078,7 @@ function! SetupYouCompleteMe()
     nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nnoremap <leader>gr :YcmForceCompileAndDiagnostics<CR>
 
-    set completeopt=longest,preview
+    set completeopt=preview,menu
     autocmd InsertLeave * if pumvisible() == 0|pclose|endif
     inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 
@@ -1025,21 +1091,9 @@ function! SetupYouCompleteMe()
     let g:ycm_complete_in_comments = 1
     let g:ycm_complete_in_strings = 1
     let g:ycm_key_invoke_completion = "<c-y>"
-    let g:ycm_filetype_blacklist = {
-               \ 'tagbar' : 1,
-               \ 'qf' : 1,
-               \ 'notes' : 1,
-               \ 'markdown' : 1,
-               \ 'unite' : 1,
-               \ 'text' : 1,
-               \ 'vimwiki' : 1,
-               \ 'pandoc' : 1,
-               \ 'infolog' : 1,
-               \ 'mail' : 1,
-               \ 'diff' : 1,
-               \ 'patch' : 1,
-               \ 'git' : 1
-               \}
+    let g:ycm_filetype_whitelist = { 'c': 1, 'cpp': 1, 'python': 1 }
+    let g:ycm_filetype_blacklist = { '*' :  1 }
+    let g:ycm_python_binary_path = '/usr/bin/python3'
 endfunction " end of SetupYouCompleteMe
 
 function! SetupDrawit()
@@ -1063,42 +1117,42 @@ function! SetupColorColumn2()
 endfunction
 
 " replaced by unite-session
-"function! SetupSessionman()
-"    set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-"    nmap <leader>sl :SessionList<CR>
-"    nmap <leader>ss :SessionSave<CR>
-"    nmap <leader>sc :SessionClose<CR>
-"endfunction
+function! SetupSessionman()
+"   set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
+"   nmap <leader>sl :SessionList<CR>
+"   nmap <leader>ss :SessionSave<CR>
+"   nmap <leader>sc :SessionClose<CR>
+endfunction
 
 let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
 let s:minfontsize = 6
 let s:maxfontsize = 32
 function! AdjustFontSize(amount)
-  if has("gui_running")
-    let fontname = substitute(&guifont, s:pattern, '\1', '')
-    let cursize = substitute(&guifont, s:pattern, '\2', '')
-    let newsize = cursize + a:amount
-    if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
-      let newfont = fontname . newsize
-      let &guifont = newfont
+    if has("gui_running")
+        let fontname = substitute(&guifont, s:pattern, '\1', '')
+        let cursize = substitute(&guifont, s:pattern, '\2', '')
+        let newsize = cursize + a:amount
+        if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
+            let newfont = fontname . newsize
+            let &guifont = newfont
+        endif
+    else
+        echoerr "You need to run the GUI version of Vim to use this function."
     endif
-  else
-    echoerr "You need to run the GUI version of Vim to use this function."
-  endif
 endfunction
 
 function! LargerFont()
-  call AdjustFontSize(1)
+    call AdjustFontSize(1)
 endfunction
 command! LargerFont call LargerFont()
 
 function! SmallerFont()
-  call AdjustFontSize(-1)
+    call AdjustFontSize(-1)
 endfunction
 command! SmallerFont call SmallerFont()
 
-noremap <leader>fj :call SmallerFont()<cr>
-noremap <leader>fk :call LargerFont()<cr>
+noremap <leader>ftj :call SmallerFont()<cr>
+noremap <leader>ftk :call LargerFont()<cr>
 
 function! SetupDoxgenToolkit()
     let g:DoxygenToolkit_briefTag_funcName = "yes"
@@ -1169,6 +1223,100 @@ function! SetupVimBookmarks()
         \ })
 endfunction
 
+function! SetupEasyGrep()
+    let g:EasyGrepWindow = 1
+endfunction
+
+function! GetGitRootDir(path)
+    if !executable('git')
+        return ''
+    endif
+
+    let l:git_cmd = 'git rev-parse --show-toplevel'
+    let l:cmd = 'cd ' . a:path . ' && ' . l:git_cmd
+    let l:ret = system(l:cmd)
+    if v:shell_error != 0
+        return ''
+    endif
+    let l:ret_split = split(l:ret, '\n')
+    return l:ret_split[0]
+endfunction
+
+function! GetCurrentPath()
+    let l:path = expand('%:h')
+
+    if l:path != ''
+        return l:path
+    endif
+
+    return getcwd()
+endfunction
+
+function! GetProperWorkspaceDir()
+    let l:cwd = GetCurrentPath()
+    if executable('git')
+        let l:git_path = GetGitRootDir(l:cwd)
+        if l:git_path != ''
+            return l:git_path
+        endif
+    endif
+
+    if executable('svn')
+        "let l:svn_path = GetSvnRootDir(l:cwd)
+        if l:svn_path != ''
+            return l:svn_path
+        endif
+    endif
+
+    return l:cwd
+endfunction
+
+function! FlyGrepWorkspace()
+    let l:cwd = GetProperWorkspaceDir()
+    if l:cwd != ''
+        let l:flygrep_args = { 'dir': l:cwd }
+        call FlyGrep#open(l:flygrep_args)
+    else
+        call FlyGrep#open({})
+    endif
+endfunction
+
+function! SetupFlyGrep()
+    command! -nargs=0 FlyGrepWorkspace call FlyGrepWorkspace()
+    nmap <silent> <leader>fg :FlyGrepWorkspace<cr>
+endfunction
+
+func! GtagsMsgHandler(chn, msg)
+    echo a:msg
+endfunc
+
+func! MakeGtags()
+    let l:cwd = GetProperWorkspaceDir()
+    if l:cwd != ''
+        let l:path = input("==========================================================\n" .
+                         \ "Ready to generate GTAGS in this path:                     \n" .
+                         \ "", l:cwd, "file")
+        redraw
+        if l:path ==# ''
+            echom 'GTAGS generating aborted!'
+            return
+        endif
+        if  !isdirectory(l:path)
+            echom 'GTAGS generating aborted! ' . l:path . ' is not a dir.'
+            return
+        endif
+        let l:gtags_cmd = 'cd ' . l:path . ' && gtags -v'
+        call job_start(['sh', '-c', l:gtags_cmd ], {'callback': 'GtagsMsgHandler'})
+    else
+        echom "no available path."
+    endif
+endfunc
+
+function! SetupMakeGtags()
+    command! -nargs=0 MakeGtags call MakeGtags()
+    nmap <silent> <leader>mg :MakeGtags<cr>
+endfunction
+
 "
 " vim setup
 "
@@ -1199,7 +1347,7 @@ call SetupStatusLine()
 call SetupDrawit()
 call SetupConqueTerm()
 call SetupUndoTree()
-"call SetupSessionman()
+call SetupSessionman()
 call SetupDoxgenToolkit()
 call SetupSyntastic()
 call SetupVimBookmarks()
@@ -1211,3 +1359,7 @@ call SetupYouCompleteMe()
 call SetupCtrlp()
 call SetupVimwiki()
 call SetupMarkdown()
+call SetupEasyGrep()
+call SetupFlyGrep()
+call SetupMakeGtags()
+
