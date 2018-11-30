@@ -94,10 +94,7 @@ function! GetDefaultBufferVimrc()
 endfunction
 
 function! GetPluginPath()
-    let path = ''
-    if GetOS() == g:OS_WINDOWS
-        let path ='~/.vim/plugged'
-    endif
+    let path ='~/.vim/plugged'
     return path
 endfunction
 
@@ -1289,6 +1286,10 @@ func! GtagsMsgHandler(chn, msg)
 endfunc
 
 func! MakeGtags()
+    if !has('job')
+        echoerr 'Need vim with +job.'
+        return
+    endif
     let l:cwd = GetProperWorkspaceDir()
     if l:cwd != ''
         let l:path = input("==========================================================\n" .
@@ -1349,7 +1350,6 @@ call SetupSessionman()
 call SetupDoxgenToolkit()
 call SetupSyntastic()
 call SetupVimBookmarks()
-call SetupColorScheme()
 call SetupUnite()
 call SetupColorizer()
 " call SetupUltiSnipsConflict()
