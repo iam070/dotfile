@@ -96,8 +96,6 @@ endfunction
 function! GetPluginPath()
     let path = ''
     if GetOS() == g:OS_WINDOWS
-        let path = '$VIM/vimfiles/plugged'
-    else
         let path ='~/.vim/plugged'
     endif
     return path
